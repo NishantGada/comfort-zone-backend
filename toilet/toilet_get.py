@@ -8,7 +8,7 @@ def get_toilet_details():
     toilet_id = request.args.get('toilet_id')
     
     connection = get_connection()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     cursor.execute("SELECT * FROM toilets WHERE toilet_id = %s", (toilet_id,))
     toilet_details = cursor.fetchone()
@@ -29,9 +29,9 @@ def get_toilet_details():
 
     comments_list = [
         {
-            "user": f"{row[2]} {row[3]}",
-            "comment": row[0],
-            "timestamp": row[1].strftime("%Y-%m-%d %H:%M:%S")
+            "user": f"{row['first_name']} {row['last_name']}",
+            "comment": row['comment_text'],
+            "timestamp": row['commented_at'].strftime("%Y-%m-%d %H:%M:%S")
         }
         for row in toilet_comments
     ]
@@ -40,8 +40,7 @@ def get_toilet_details():
     cursor.execute("SELECT feature_name FROM toilet_features WHERE toilet_id = %s", (toilet_id,))
     features = cursor.fetchall()
 
-    features_list = [row[0] for row in features]
-    print("features_list: ", features_list)
+    features_list = [row["feature_name"] for row in features]
     
     return jsonify({
         "success": True, 
@@ -58,3 +57,21 @@ def get_toilet_details():
             }
         }
     }), 200
+
+@toilet_bp.route("/toilets", methods=["GET"])
+def get_all_toilets():
+    try:
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM toilets")
+        toilets = cursor.fetchall()
+
+        return jsonify({"success": True, "message": "All toilets fetched successfully", "data": toilets})
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": "An error occurred",
+            "error": str(e)
+        }), 500
