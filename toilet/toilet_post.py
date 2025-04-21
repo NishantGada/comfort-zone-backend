@@ -20,11 +20,10 @@ def add_new_toilet():
         INSERT INTO toilets (
             toilet_id, toilet_name, toilet_description,
             toilet_address_line_1, toilet_address_line_2,
-            toilet_city, toilet_state, toilet_zipcode,
-            toilet_rating, toilet_gender, toilet_charges,
-            toilet_build_date
+            toilet_city, toilet_state, toilet_zipcode, toilet_gender, toilet_charges,
+            toilet_build_date, open_time, close_time
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         cursor.execute(
@@ -38,10 +37,11 @@ def add_new_toilet():
                 data.get("toilet_city"),
                 data.get("toilet_state"),
                 data.get("toilet_zipcode"),
-                data.get("toilet_rating"),
                 data.get("toilet_gender"),
                 data.get("toilet_charges", 0.0),
-                data.get("toilet_build_date")  # Should be in 'YYYY-MM-DD' format
+                data.get("toilet_build_date"),  # Should be in 'YYYY-MM-DD' format
+                data.get("open_time"),
+                data.get("close_time")
             ),
         )
 
