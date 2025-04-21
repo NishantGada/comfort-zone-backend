@@ -6,7 +6,7 @@ from . import users_bp
 @users_bp.route("/users", methods=["GET"])
 def get_all_users():    
     connection = get_connection()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
