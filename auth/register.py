@@ -7,7 +7,7 @@ from helper_functions import validate_request
 from . import auth_bp
 
 @auth_bp.route("/register", methods=["POST"])
-def register_new_user():
+def register():
     data = request.get_json()
     connection = get_connection()
     cursor = connection.cursor()
